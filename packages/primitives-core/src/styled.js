@@ -1,8 +1,8 @@
 // @flow
-import * as React from 'react'
-import { interleave } from './utils'
 import { ThemeContext } from '@emotion/react'
+import * as React from 'react'
 import { createCss } from './css'
+import { interleave } from './utils'
 
 let testOmitPropsOnComponent = prop => prop !== 'theme' && prop !== 'as'
 
@@ -72,7 +72,11 @@ export function createStyled(
           }
         }
 
-        newProps.style = [css.apply(mergedProps, styles), props.style]
+        newProps.style =
+          typeof props.style === 'function'
+            ? state => [css.apply(mergedProps, styles), props.style(state)]
+            : [css.apply(mergedProps, styles), props.style]
+            
         newProps.ref = ref
 
         // $FlowFixMe
